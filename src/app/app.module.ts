@@ -18,10 +18,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list'; 
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StudentsComponent } from './teacher/students.component';
+import { StudentsContComponent } from './teacher/students-cont.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    StudentsComponent,
+    StudentsContComponent
   ],
   imports: [
     BrowserModule,
