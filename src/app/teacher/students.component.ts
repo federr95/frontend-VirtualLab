@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
+
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -23,16 +24,20 @@ export class StudentsComponent implements OnInit {
   @ViewChild('matpaginator', {static:true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static:true}) sort!: MatSort;
 
-  @Input() studentSelected!: Student[];
+  
   @Input() allStudentVector!: Student[];
+  @Input() studentSelected!: Student[];
+  @Input() filteredStudent: Student[] = [];
+  @Input() studentNotSelected: Student[] = [];
+
+  @Output('delete') studentsToUnenroll = new EventEmitter<Student[]>();
+  @Output('add') studentToEnroll = new EventEmitter<Student>();
   
   studentControl = new FormControl();
   displayedColumns: string[] = ['select', 'id', 'name', 'firstName'];
   dataSource = new MatTableDataSource<Student>(this.studentSelected);
   selection = new SelectionModel<Student>(true, []);
-  
-  filteredStudent: Student[] = [];
-  studentNotSelected: Student[] = [];
+
   studentToAdd!: Student;
 
   numberOfStudentSelected!: number;
@@ -43,18 +48,6 @@ export class StudentsComponent implements OnInit {
 
   ngOnInit() {
     this.numberOfStudentSelected = this.studentSelected.length;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.studentNotSelected = this.allStudentVector.filter(x => {
-      //!this.studentSelected.includes(x));
-      if(this.studentSelected.map( function(y) {
-          return y.id;
-        }).includes(x.id))
-      return false;
-        else 
-      return true;   
-    })
-    this.filteredStudent = this.studentNotSelected;
     this.dataSource = new MatTableDataSource<Student>(this.studentSelected);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -77,7 +70,7 @@ export class StudentsComponent implements OnInit {
     this.selection.select(...this.dataSource.data);
   }
 
-  deleteSelectedStudent() {
+  /*deleteSelectedStudent() {
     for(var i=0; i<this.selection.selected.length; i++){
       //console.log(this.selection.selected.length);
       var pos = this.studentSelected.indexOf(this.selection.selected[i]);
@@ -91,21 +84,19 @@ export class StudentsComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.filteredStudent = this.studentNotSelected;
     this.selection.clear();
+  }*/
+
+  unenrollSelectedStudent(){
+    if(!this.selection.isEmpty()){
+      this.studentsToUnenroll.emit(this.selection.selected);
+      this.numberOfStudentSelected = this.studentSelected.length;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.selection.clear();
+    }
   }
 
-  displayFn(user: Student): any {
-    return user && user.name ? user.name + '  ' + user.firstName + '  ' + user.id: '';
-  }
-
-  filter(){
-    const filterValue = this.studentControl.value.toLowerCase();
-    //console.log(filterValue);
-    //console.log(this.studentNotSelected);
-    return this.filteredStudent = this.studentNotSelected.filter(option => option.name.toLowerCase().includes(filterValue) || 
-        option.firstName.toLowerCase().includes(filterValue) || option.id.toLowerCase().includes(filterValue));
-  }
-
-  addStudent() {
+  /*addStudent() {
     //console.log(this.studentNotSelected);
     if(!this.studentSelected.map( function(x) {
        return x.id; 
@@ -134,11 +125,36 @@ export class StudentsComponent implements OnInit {
         this.filteredStudent = this.studentNotSelected; // serve a riportare tutti gli studenti che erano stati esclusi dal filtro
         this.dialog.open(DialogElementsExampleDialog);
     }
+  }*/
+
+  enrollSelectedStudent() {
+    if(this.matInput.value != ''){
+      this.studentToEnroll.emit(this.studentToAdd);
+      this.numberOfStudentSelected = this.studentSelected.length;
+      this.dataSource = new MatTableDataSource<Student>(this.studentSelected);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.matInput.value = '';
+      this.filteredStudent = this.studentNotSelected; // serve a riportare tutti gli studenti che erano stati esclusi dal filtro
+      this.dialog.open(DialogElementsExampleDialog);
+    }
   }
 
   getSelectedStudent(studentSelect: Student) {
     this.studentToAdd = studentSelect;
   }
+
+  displayFn(user: Student): any {
+    return user && user.name ? user.name + '  ' + user.firstName + '  ' + user.id: '';
+  }
+
+  filter(){
+    const filterValue = this.studentControl.value.toLowerCase();
+    
+    return this.filteredStudent = this.studentNotSelected.filter(option => option.name.toLowerCase().includes(filterValue) || 
+        option.firstName.toLowerCase().includes(filterValue) || option.id.toLowerCase().includes(filterValue));
+  }
+
 }
 
 @Component({

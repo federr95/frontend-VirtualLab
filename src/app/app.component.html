@@ -6,7 +6,7 @@
   <button mat-button (click)="toggleForMenuClick()" aria-hidden="false" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
-  <span>VirtualLab</span>
+  <h1 routerLink="/home">VirtualLab</h1>
   <span class="example-spacer"></span>
 </mat-toolbar>
 
@@ -20,7 +20,7 @@
     <div class="container">
       <mat-nav-list>
         <mat-list-item>
-          Applicazioni Internet
+          <a routerLink="/teacher/course/applicazioni-internet/students">Applicazioni Internet</a>
         </mat-list-item>
         <mat-list-item>
           Programmazione di Sistema
@@ -30,16 +30,15 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-tab-group>
-      <mat-tab label="Studenti">
-        
-        <app-students-cont></app-students-cont>
-
-      </mat-tab>
-      <mat-tab label="Gruppi">
-        <div class="container"></div> 
-      </mat-tab>
-    </mat-tab-group>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link label="Studenti"
+                      *ngFor="let link of navLinks"
+                      [routerLink]="link.path"
+                      routerLinkActive #rla="routerLinkActive"
+                      [active]="rla.isActive">
+                      {{link.label}}
+      </a>
+    </nav>  
     
     
     
@@ -69,7 +68,8 @@
       </li>
     </ul>
     -->
-  <!-- -->
+    <router-outlet></router-outlet>
+
   </mat-sidenav-content>
 
 </mat-sidenav-container>

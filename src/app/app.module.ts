@@ -17,15 +17,21 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button'; 
 import { MatListModule } from '@angular/material/list'; 
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { StudentsComponent } from './teacher/students.component';
 import { StudentsContComponent } from './teacher/students-cont.component';
+import { AppRoutingModule } from './app-routing.module'; /* IMPORTANTE */
+import { HomeComponent } from './HomeComponent';
+import { PageNotFoundComponent } from './PageNotFoundComponent';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     StudentsComponent,
-    StudentsContComponent
+    StudentsContComponent,
+    HomeComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -47,9 +53,13 @@ import { StudentsContComponent } from './teacher/students-cont.component';
     MatCheckboxModule,
     FormsModule,
     MatSortModule,
-    MatDialogModule
+    MatDialogModule,
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+

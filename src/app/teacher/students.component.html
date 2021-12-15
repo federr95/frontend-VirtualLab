@@ -15,11 +15,11 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <button mat-button (click)="addStudent()" color="Basic"> Add </button>
+        <button mat-button (click)="enrollSelectedStudent()" color="Basic"> Add </button>
       </form> 
 
       <div class="example-button-row">
-        <button mat-button (click)="deleteSelectedStudent()"> Delete Selected </button>
+        <button mat-button (click)="unenrollSelectedStudent()"> Delete Selected </button>
       </div>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>

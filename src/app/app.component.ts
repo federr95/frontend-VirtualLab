@@ -31,6 +31,11 @@ export class AppComponent {
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
   
+  navLinks = [
+    { path: 'teacher/course/applicazioni-internet/students', label:'Studenti' },
+    { path: 'teacher/course/applicazioni-internet/vms', label:'VMs'},
+  ];
+  
   toggleForMenuClick() {
     this.sidenav.toggle();
   }
